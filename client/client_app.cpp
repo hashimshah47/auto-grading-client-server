@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <vector>
 
-#define PORT 8080
+#define PORT 9090
 
 ClientApp::ClientApp(QWidget *parent) : QWidget(parent) {
     setWindowTitle("Grading Client");
@@ -31,6 +31,16 @@ ClientApp::ClientApp(QWidget *parent) : QWidget(parent) {
     imageLabel->setText("Logo will appear here after connecting.");
     imageLabel->setFixedSize(300, 200);
 
+    // reportLabel = new QLabel(this);
+    // reportLabel->setWordWrap(true);
+    // reportLabel->setText("Report will appear here.");
+    // reportLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    // reportLabel->setStyleSheet("QLabel { background-color: #f0f0f0; border: 1px solid #ccc; padding: 5px; }");
+
+    // layout->addWidget(new QLabel("Grading Report:"));
+    // layout->addWidget(reportLabel);
+
+
     layout->addWidget(new QLabel("Server IP:"));
     layout->addWidget(ipInput);
     layout->addWidget(connectBtn);
@@ -40,7 +50,9 @@ ClientApp::ClientApp(QWidget *parent) : QWidget(parent) {
 }
 
 void ClientApp::connectToServer() {
+    
     QString ip = ipInput->text();
+
     if (ip.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Please enter an IP address.");
         return;
@@ -60,6 +72,8 @@ void ClientApp::connectToServer() {
         QMessageBox::critical(this, "Error", "Connection failed.");
         return;
     }
+    int mode = 0;
+    send(sock, &mode, sizeof(int), 0);
 
     auto receiveFile = [&](QString fileName) {
         int file_size = 0;
@@ -80,6 +94,8 @@ void ClientApp::connectToServer() {
         file.close();
         return true;
     };
+
+
 
     // Receive image
     if (!receiveFile("logo.png")) {

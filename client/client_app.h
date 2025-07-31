@@ -17,6 +17,7 @@ private slots:
 private:
     QLineEdit *ipInput;
     QLabel *imageLabel;
+    QLabel *reportLabel;
 };
 
 #endif // CLIENT_APP_H
